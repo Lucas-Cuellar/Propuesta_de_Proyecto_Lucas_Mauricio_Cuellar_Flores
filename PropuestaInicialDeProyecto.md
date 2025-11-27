@@ -112,7 +112,7 @@ Escanea la carpeta de modelos, permite elegir el modelo de IA a usar y, tras la 
 | Nº | Nombre de la funcionalidad | Descripción breve | Estado actual |
 |----|-----------------------------|-------------------|----------------|
 | 1 | Detección en tiempo real (micrófono) |Captura audio del micrófono en ventanas de 1 s, extrae log-mel y muestra la predicción continua | ☐ Planeada ✅ En desarrollo |
-| 2 | Envio de alertas | Si detecta un sonido disfuncional manda una alerta a telegram ✅ En desarrollo |
+| 2 | Envio de alertas | Si detecta un sonido disfuncional manda una alerta a telegram | ☐ Planeada ✅ | En desarrollo |
 | 3 | Guardado | Guarda los reportes de error en una csv| ☐ Planeada ✅ En desarrollo |
 
 ## 5. Compromiso del Estudiante
