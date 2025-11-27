@@ -48,27 +48,59 @@ Marca los que planeas usar:
 - ✅ Interfaces o clases abstractas
 
 ### Clases estimadas
-- **Cantidad inicial de clases:** __9___  
+- **Cantidad inicial de clases:** __11___  
 - **Ejemplo de posibles clases:** *(Usuario, Producto, Pedido, etc.)*
+1. AudioMonitor
 
-1. AudioSource 
+Se encarga de capturar audio en tiempo real desde el micrófono usando PyAudio.
 
-2. FileAudioSource
+Entrega bloques de audio (ndarray) al resto del sistema mediante un callback.
 
-3. MicrophoneAudioSource
+2. AudioConfig
 
-4. FeatureExtractor 
+Define los parámetros de captura de audio (frecuencia de muestreo, tamaño de chunk).
 
-5. LogMelExtractor
+Centraliza esta configuración para que toda la app use valores coherentes.
 
-6. MFCCExtractor
+3. BaseClassifier 
 
-7. AudioClassifier 
+BaseClassifier: interfaz abstracta que define cómo debe comportarse cualquier clasificador de audio.
 
-8. KerasModel
+4. KerasSoundClassifier: implementación concreta que usa un modelo Keras (.h5 + .npz) para predecir el estado del equipo. (Ejemplo directo de herencia + polimorfismo.)
 
-9. DetectionPipeline 
+5. BaseNotifier 
 
+BaseNotifier: interfaz para canales de notificación (Telegram, WhatsApp, etc.).
+
+6. TelegramNotifier: implementación que envía alertas al técnico mediante Telegram Bot API.
+
+BaseLogger 
+
+7. BaseLogger: interfaz para el sistema de registro de fallas.
+
+CsvLogger: implementación que guarda cada falla en un archivo .csv con fecha, hora, estado y confianza.
+
+8. MonitoringController
+
+Es el “cerebro” del monitoreo: recibe audio ya capturado, llama al clasificador, aplica el cooldown de alertas y decide cuándo notificar y cuándo registrar en el log.
+
+No sabe nada de UI ni de detalles de Telegram o CSV; solo trabaja con interfaces.
+
+9. MonitoringApp
+
+Ventana principal de monitoreo.
+
+Coordina MonitoringController, AudioMonitor, StatusPanel y ControlsPanel; actualiza la interfaz según los resultados del clasificador.
+
+10. StatusPanel
+
+Panel gráfico que muestra el estado actual del equipo (AMBIENTE, FUNCIONAL, DISFUNCIONAL) y la confianza, usando un “semáforo” de colores y etiquetas.
+
+11. ModelSelector
+
+Pantalla inicial de la aplicación.
+
+Escanea la carpeta de modelos, permite elegir el modelo de IA a usar y, tras la selección, construye todos los componentes necesarios y abre la MonitoringApp.
 ### Persistencia de datos
 - ✅ Archivos locales  
 - [ ] Base de datos  
