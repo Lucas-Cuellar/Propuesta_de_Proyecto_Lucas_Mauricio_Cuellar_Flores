@@ -31,9 +31,9 @@ El proyecto resuelve el problema del diagnóstico tardío de fallas, proporciona
 Su arquitectura orientada a objetos permite extender fácilmente nuevas clases de detectores, fuentes de sonido o modelos de IA sin reescribir el sistema.
 
 ### Objetivos principales
-1. Desarrollar una aplicación de escritorio modular basada en principios de Programación Orientada a Objetos (POO), que integre herencia, encapsulamiento, abstracción y polimorfismo de forma clara y eficiente. 
-2.  Entrenar e implementar una red neuronal CNN 2D que clasifique sonidos funcionales y disfuncionales de mecanismos mediante análisis espectral (log-mel o MFCC).
-3.  Integrar la red neuronal con una interfaz grafica entendible y optima
+1. Lograr el correcto monitoreo y comparacion con un microfono en vivo
+2. Lograr el correcto envio de alerta cuando se obtenga un sonido defectuoso.
+3. Lograr el correcto guardado y ordenamiento de los errores en mi csv
 
 ---
 
