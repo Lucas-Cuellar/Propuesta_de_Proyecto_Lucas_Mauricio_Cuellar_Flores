@@ -111,9 +111,9 @@ Escanea la carpeta de modelos, permite elegir el modelo de IA a usar y, tras la 
 
 | Nº | Nombre de la funcionalidad | Descripción breve | Estado actual |
 |----|-----------------------------|-------------------|----------------|
-| 1 | Clasificación de archivos de audio | Carga un modelo .keras, permite seleccionar uno o varios audios (.wav) y devuelve la clase (funcional/disfuncional) con su confianza. | ☐ Planeada ✅ En desarrollo |
-| 2 | Detección en tiempo real (micrófono) | Captura audio del micrófono en ventanas de 1 s, extrae log-mel y muestra la predicción continua; emite alerta si supera el umbral. | ☐ Planeada ✅ En desarrollo |
-| 3 | Entrenamiento y evaluación del modelo | Script train_audio.py que genera el modelo CNN a partir de un dataset por carpetas, e imprime métricas (reporte y matriz de confusión). | ☐ Planeada ✅ En desarrollo |
+| 1 | Detección en tiempo real (micrófono) |Captura audio del micrófono en ventanas de 1 s, extrae log-mel y muestra la predicción continua | ☐ Planeada ✅ En desarrollo |
+| 2 | Envio de alertas | Si detecta un sonido disfuncional manda una alerta a telegram ✅ En desarrollo |
+| 3 | Guardado | Guarda los reportes de error en una csv| ☐ Planeada ✅ En desarrollo |
 
 ## 5. Compromiso del Estudiante
 
