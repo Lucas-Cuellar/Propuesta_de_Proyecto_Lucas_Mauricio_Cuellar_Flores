@@ -8,7 +8,7 @@ Este proyecto implementa un sistema capaz de **escuchar**, **analizar** y **dete
 # 📂 Arquitectura General del Proyecto
 
 ```
-monitor_ia/
+Definitive_progra/
 │
 ├── main.py
 │
@@ -21,7 +21,8 @@ monitor_ia/
 │
 ├── core/
 │   ├── interfaces.py
-│   └── monitor_controller.py
+│   ├─── monitor_controller.py
+│   └── logger_interface.py
 │
 ├── infra/
 │   ├── classifier_keras.py
@@ -29,11 +30,14 @@ monitor_ia/
 │   ├── logging_utils.py
 │   └── notifier_telegram.py
 │
-└── ui/
-    ├── model_selector.py
-    ├── ui_monitoring.py
-    ├── status_panel.py
-    └── controls_panel.py
+├── ui/
+│   ├── model_selector.py
+│   ├── ui_monitoring.py
+│   ├── status_panel.py
+│   ├─── controls_panel.py
+│   └── theme.py
+├──Logs/
+└──Muestras/
 ```
 
 ---
