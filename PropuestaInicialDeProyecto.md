@@ -33,7 +33,7 @@ Su arquitectura orientada a objetos permite extender fácilmente nuevas clases d
 ### Objetivos principales
 1. Lograr el correcto monitoreo y comparacion con un microfono en vivo
 2. Lograr el correcto envio de alerta cuando se obtenga un sonido defectuoso.
-3. Lograr el correcto guardado y ordenamiento de los errores en mi csv
+3. Lograr el correcto guardado y ordenamiento de los errores en un csv
 
 ---
 
