@@ -1,0 +1,24 @@
+# ============================
+#  CONFIGURACIÓN GENERAL DEL SISTEMA
+#  Todo lo sensible (rutas y credenciales)
+#  se maneja por VARIABLES DE ENTORNO
+# ============================
+
+audio:
+  rate: 44100                # Frecuencia de muestreo
+  chunk_duration_sec: 2      # Duración de cada bloque de audio
+
+monitoring:
+  alert_cooldown_sec: 10     # Tiempo mínimo entre alertas
+
+telegram:
+  token: "7943827698:AAF-ZVZ2ss1m_47HG7rakXKUbcr2Dv3qo0c"  # Token del bot de Telegram
+  chat_id: "7050537008"    # ID del chat de Telegram
+  timeout: 10                # Timeout del request (segundos)
+
+# Las rutas YA NO se definen aquí.
+# Las variables SOUND_MODELS_DIR y SOUND_LOGS_DIR
+# se tomarán desde el entorno.
+paths:
+  models_dir: "SOUND_MODELS_DIR"           # Se usará SOUND_MODELS_DIR
+  logs_dir: "SOUND_LOGS_DIR"             # Se usará SOUND_LOGS_DIR
