@@ -12,8 +12,8 @@ monitoring:
   alert_cooldown_sec: 10     # Tiempo mínimo entre alertas
 
 telegram:
-  token: "7943827698:AAF-ZVZ2ss1m_47HG7rakXKUbcr2Dv3qo0c"  # Token del bot de Telegram
-  chat_id: "7050537008"    # ID del chat de Telegram
+  token: " "  # aca debe poner el Token del bot de Telegram
+  chat_id: " "    #aca debe poner el ID del chat de Telegram
   timeout: 10                # Timeout del request (segundos)
 
 # Las rutas YA NO se definen aquí.
@@ -21,4 +21,5 @@ telegram:
 # se tomarán desde el entorno.
 paths:
   models_dir: "SOUND_MODELS_DIR"           # Se usará SOUND_MODELS_DIR
+
   logs_dir: "SOUND_LOGS_DIR"             # Se usará SOUND_LOGS_DIR
