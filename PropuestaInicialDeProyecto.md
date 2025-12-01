@@ -33,7 +33,8 @@ Su arquitectura orientada a objetos permite extender fácilmente nuevas clases d
 ### Objetivos principales
 1. Lograr el correcto monitoreo y comparacion con un microfono en vivo
 2. Lograr el correcto envio de alerta cuando se obtenga un sonido defectuoso.
-3. Lograr el correcto guardado y ordenamiento de los errores en un csv
+3. Lograr el correcto guardado y ordenamiento de los errores en listas
+4. Añadir una verificacion adicional con umbral de sonido
 
 ---
 
@@ -112,8 +113,9 @@ Escanea la carpeta de modelos, permite elegir el modelo de IA a usar y, tras la 
 | Nº | Nombre de la funcionalidad | Descripción breve | Estado actual |
 |----|-----------------------------|-------------------|----------------|
 | 1 | Detección en tiempo real (micrófono) |Captura audio del micrófono en ventanas de 1 s, extrae log-mel y muestra la predicción continua | ☐ Planeada ✅ En desarrollo |
-| 2 | Envio de alertas | Si detecta un sonido disfuncional manda una alerta a telegram | ☐ Planeada ✅ | En desarrollo |
-| 3 | Guardado | Guarda los reportes de error en una csv| ☐ Planeada ✅ En desarrollo |
+| 2 | Envio de alertas | Si detecta un sonido disfuncional manda una alerta a telegram y gmail| ☐ Planeada ✅ | En desarrollo |
+| 3 | Guardado | Guarda los reportes de error en una csv y .db| ☐ Planeada ✅ En desarrollo |
+| 4 | Verificacion | Verifica si el error tiene una coincidencia alta| ☐ Planeada ✅ En desarrollo |
 
 ## 5. Compromiso del Estudiante
 
