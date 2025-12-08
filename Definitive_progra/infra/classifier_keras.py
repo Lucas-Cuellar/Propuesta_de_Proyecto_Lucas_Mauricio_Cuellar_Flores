@@ -2,10 +2,20 @@
 import numpy as np
 import tensorflow as tf
 
-from core.interfaces import BaseClassifier
+from core.BaseClassifier import BaseClassifier
 from infra.audio_features import compute_mfcc, normalize_features, pad_or_trim
 from config.monitor_config import RATE
+"""
+Clasificador basado en Keras (.h5 + preproc.npz)
 
+Responsabilidad:
+- Preprocesar audio
+- Ejecutar el modelo de IA
+- Entregar (clase, confianza)
+
+Se conecta con:
+- infra/audio_features
+"""
 
 class KerasSoundClassifier(BaseClassifier):
     def __init__(self) -> None:

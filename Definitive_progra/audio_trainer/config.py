@@ -23,8 +23,7 @@ AUGMENT_NOISE_STD = 0.01
 MIN_CHUNKS_WARNING = 5
 
 # Modelos
-MODELS_DIR = r"ACA DEBES PONER LA  DIRECCION DE LA CARPETA MUESTRAS"
+MODELS_DIR = r"C:\Users\PERSONAL\Desktop\Ultimate_Progra\Definitive_progra\Muestras"
 
 # Asegura que exista el directorio de modelos
 os.makedirs(MODELS_DIR, exist_ok=True)
-

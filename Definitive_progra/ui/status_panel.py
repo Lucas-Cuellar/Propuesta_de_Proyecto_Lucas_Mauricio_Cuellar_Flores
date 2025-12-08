@@ -2,6 +2,17 @@
 import tkinter as tk
 from tkinter import ttk
 
+"""
+Panel visual de estado:
+- Semáforo (canvas)
+- Texto de estado
+- Texto de confianza
+
+Responsabilidad:
+- Mostrar visualmente el resultado del monitoreo.
+- NO procesa audio ni notifica ni clasifica.
+"""
+
 _STATUS_STYLES = {
     "FUNCIONAL": ("#4CAF50", "Green.TLabel"),
     "AMBIENTE": ("#2196F3", "Blue.TLabel"),

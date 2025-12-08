@@ -1,217 +1,172 @@
-# 📘 Sistema Inteligente de Monitoreo Acústico
-### Monitoreo en tiempo real con IA, Telegram y registro automático de fallas
+📘 Sistema Inteligente de Monitoreo Acústico (v2.0)
+Monitoreo en tiempo real con IA, Alertas Multicanal y Registro Híbrido
+Este proyecto implementa una solución de Mantenimiento Predictivo capaz de escuchar, analizar y detectar anomalías en maquinaria industrial. Utiliza Deep Learning (Keras/CNN), procesamiento de audio asíncrono, y un robusto sistema de notificaciones y persistencia.
 
-Este proyecto implementa un sistema capaz de **escuchar**, **analizar** y **detectar anomalías acústicas** en un equipo o mecanismo, utilizando redes neuronales (Keras), audio en tiempo real, notificaciones automáticas y registro estructurado de fallas en CSV.
+📂 Arquitectura General del Proyecto (Refactorizada)
+La estructura ha evolucionado para separar mejor las responsabilidades (infra dividida en módulos y core con interfaces segregadas).
 
----
+Plaintext
 
-# 📂 Arquitectura General del Proyecto
-
-```
 Definitive_progra/
 │
-├── main.py
+├── main.py                     # Launcher
 │
-├── config/
-│   ├── monitor_config.py
-│   └── monitor_settings.yaml
+├── config/                     # Configuración Segura
+│   ├── monitor_config.py       # Lector de Variables de Entorno
+│   └── monitor_settings.yaml   # Parámetros de usuario
 │
-├── audio/
-│   └── audio_monitor.py
+├── audio/                      # Hardware
+│   └── audio_monitor.py        # Captura asíncrona con reinicio seguro
 │
-├── core/
-│   ├── interfaces.py
-│   ├─── monitor_controller.py
-│   └── logger_interface.py
+├── core/                       # Lógica de Negocio (Abstracciones)
+│   ├── monitor_controller.py   # Cerebro: Orquesta lógica y tiempos
+│   ├── BaseClassifier.py      # Contrato IA
+│   ├── BaseNotifier.py        # Contrato Notificaciones
+│   └── BaseLogger.py          # Contrato Logs
 │
-├── infra/
-│   ├── classifier_keras.py
-│   ├── audio_features.py
-│   ├── logging_utils.py
-│   └── notifier_telegram.py
+├── infra/                      # Implementaciones (Obreros)
+│   ├── classifier_keras.py     # Implementación IA
+│   ├── audio_features.py       # Matemáticas (MFCC)
+│   │
+│   ├── Loggers/                # Persistencia
+│   │   ├── logger_sqlite.py    # SQL Estructurado
+│   │   ├── logger_csv.py       # Texto plano
+│   │   └── logger_composite.py # Patrón Composite
+│   │
+│   └── Notifiers/              # Comunicación
+│       ├── notifier_telegram.py
+│       ├── notifier_email.py   # Gmail SMTP Seguro
+│       └── notifier_composite.py # Patrón Composite
 │
-├── ui/
-│   ├── model_selector.py
-│   ├── ui_monitoring.py
-│   ├── status_panel.py
-│   ├─── controls_panel.py
-│   └── theme.py
-├──Logs/
-└──Muestras/
-```
+├── ui/                         # Interfaz Gráfica
+│   ├── model_selector.py       # Inyección de Dependencias (Fábrica)
+│   ├── ui_monitoring.py        # Panel de Control
+│   ├── controls_panel.py       # Botones y accesos a reportes
+│   └── ...
+│
+└── logs/                       # Almacenamiento de Datos (.db, .csv)
+🔄 Flujo del Sistema (Patrón Composite)
+El sistema ahora utiliza el Patrón Composite para manejar múltiples salidas simultáneas sin complicar el controlador.
 
----
+Plaintext
 
-# 🔄 Flujo del Sistema
-
-```
 Micrófono
    ↓
-AudioMonitor  (captura chunk)
+AudioMonitor (Chunk)
    ↓
-MonitoringController  (lógica central)
+MonitoringController (Cerebro)
    ↓
-KerasSoundClassifier  (predicción)
+KerasSoundClassifier (Predicción)
    ↓
-Reglas / cooldown
+[Filtro 1] Umbral de Confianza (>85%)
    ↓
-┌─────────────┬──────────────┐
-│ TelegramNotifier            │
-│ CsvLogger (CSV)             │
-└─────────────┴──────────────┘
+[Filtro 2] Lógica de Tiempos (Cooldown vs Continuo)
    ↓
-UI (semaforo + confianza)
-```
+┌───────────────────────────────┐
+│     CompositeNotifier         │──► Telegram
+│ (Alertas Continuas/Inmediatas)│──► Gmail (con Timeout)
+└───────────────────────────────┘
+   ↓
+┌───────────────────────────────┐
+│      CompositeLogger          │──► SQLite (.db)
+│ (Registro Periódico/Cooldown) │──► CSV (.csv)
+└───────────────────────────────┘
+   ↓
+UI (Semáforo + Gráficos)
+⚙️ Configuración (YAML + Env Vars)
+Archivo: config/monitor_settings.yaml (Limpio de credenciales)
 
----
+YAML
 
-# ⚙️ Configuración (YAML)
-
-Archivo: `config/monitor_settings.yaml`
-
-```yaml
 audio:
   rate: 44100
   chunk_duration_sec: 2
 
 monitoring:
-  alert_cooldown_sec: 10
+  alert_cooldown_sec: 60          # Tiempo entre registros en BD
+  min_confidence_threshold: 0.85  # Sensibilidad mínima de la IA
 
 telegram:
-  token: "TU_TOKEN_REAL"
-  chat_id: "TU_CHAT_ID"
-  timeout: 10
+  timeout: 10  # Seguridad ante fallos de red
 
-paths:
-  models_dir: null
-  logs_dir: null
-```
+email:
+  timeout: 10  # Seguridad ante fallos de SMTP
+Nota de Seguridad: Las credenciales (TOKEN, PASSWORD, CHAT_ID) se inyectan mediante Variables de Entorno del sistema operativo, no en el archivo de texto.
 
----
+🧩 Componentes y Mejoras
+🧠 Core & Lógica (core/monitor_controller.py)
+Filtro de Confianza: Ignora predicciones débiles (<85%).
 
-# 🧩 Componentes Principales
+Doble Temporizador:
 
-## 🎤 AudioMonitor (`audio/audio_monitor.py`)
-- Captura audio en tiempo real con PyAudio.
-- Entrega bloques (chunks) al controlador.
+Alertas: Se envían continuamente mientras persista la falla.
 
-## 🧠 KerasSoundClassifier (`infra/classifier_keras.py`)
-- Cargar modelo `.h5`
-- Leer parámetros `preproc.npz`
-- Extraer MFCC
-- Normalizar
-- Predecir clase + confianza
+Logs: Se guardan respetando el cooldown para no saturar el disco.
 
-## 🧾 CsvLogger (`infra/logging_utils.py`)
-- Crear archivo CSV si no existe
-- Registrar fallas con fecha/hora/confianza
+📡 Notifiers (infra/notifiers/)
+GmailNotifier: Nuevo. Envía correos formales usando "Display Name" enmascarado y protección timeout.
 
-## 📲 TelegramNotifier (`infra/notifier_telegram.py`)
-- Construcción de mensaje de alerta
-- Envío mediante Telegram Bot API
+CompositeNotifier: Agrupa Telegram y Email. Si uno falla (ej. sin internet), el error se captura para no detener el sistema.
 
-## 🧭 MonitoringController (`core/monitor_controller.py`)
-- Control del monitoreo
-- Ejecución del clasificador
-- Aplicación de reglas + cooldown
-- Disparo de alertas/logs
-- Comunicación con la UI
+💾 Loggers (infra/loggers/)
+SqliteLogger: Nuevo. Crea bases de datos .db optimizadas con columnas separadas (Fecha, Hora, Estado, Confianza %).
 
-## 🖥️ UI Monitoring (`ui/ui_monitoring.py`)
-- Ventana principal
-- Semáforo visual
-- Controles de inicio/detención
-- Acceso al CSV
+CompositeLogger: Escribe en SQL y CSV al mismo tiempo.
 
----
+🖥️ UI (ui/)
+ModelSelector: Actúa como fábrica de objetos, inyectando las dependencias compuestas.
 
-# 🧱 Arquitectura (UML Simplificado)
+Nuevos Controles: Botones directos para abrir el historial en Excel o DB Browser.
 
-```
-                UI (Tkinter)
-                     │
-                     ▼
-          MonitoringController
-     ┌──────────────┼─────────────────┐
-     ▼              ▼                 ▼
-Classifier     Notifier           Logger
-(Keras)       (Telegram)          (CSV)
+🧪 Aplicación de SOLID y Patrones
+S — Single Responsibility
+Se separaron los Notifiers y Loggers en carpetas propias.
 
-AudioMonitor → MonitoringController
-```
+monitor_config.py solo se encarga de leer variables.
 
----
+O — Open/Closed
+Se agregó GmailNotifier y SqliteLogger sin tocar ni una línea de monitor_controller.py.
 
-# 🧪 Aplicación de SOLID
+L — Liskov Substitution
+CompositeNotifier se comporta exactamente igual que un BaseNotifier. El controlador no sabe la diferencia.
 
-## S — Single Responsibility  
-- `AudioMonitor`: solo captura audio  
-- `CsvLogger`: solo registra fallas  
+I — Interface Segregation
+Interfaces divididas en archivos propios: base_classifier.py, base_notifier.py, abstract_logger.py.
 
-## O — Open/Closed  
-- Puedes agregar `WhatsAppNotifier`, `EmailNotifier`, `DummyClassifier` sin alterar el controller.
+D — Dependency Inversion
+La UI inyecta las dependencias. El Core depende puramente de abstracciones.
 
-## L — Liskov Substitution  
-- `KerasSoundClassifier` funciona donde se espera un `BaseClassifier`.
+🏗️ Patrón Composite
+Permite tratar a un grupo de objetos (Telegram + Email) como si fuera uno solo. Simplifica enormemente la lógica del controlador.
 
-## I — Interface Segregation  
-- Interfaces pequeñas y claras: `BaseClassifier`, `BaseNotifier`, `BaseLogger`.
+✔ Checklist de Funcionalidades (v2.0)
+[x] Captura de audio asíncrona robusta (PyAudio)
 
-## D — Dependency Inversion  
-- El controller depende de interfaces, no implementaciones.
+[x] Clasificación IA con umbral de confianza configurable
 
----
+[x] Persistencia Híbrida: SQL (Estructurado) + CSV (Rápido)
 
-# 🔁 Buenas Prácticas Aplicadas
+[x] Alertas Multicanal: Telegram + Gmail (SMTP Seguro)
 
-## 1. SRP  
-Cada módulo tiene una responsabilidad clara.
+[x] Seguridad: Manejo de credenciales por Variables de Entorno
 
-## 2. Encapsulamiento  
-Atributos internos protegidos (`_model`, `_params`, `_config`).
+[x] UX: Apertura de reportes desde la interfaz
 
-## 3. Loose Coupling  
-UI → Controller → Interfaces → Implementaciones.
+[x] Resiliencia: Manejo de Timeouts y reconexión de micrófono
 
-## 4. Extensibilidad / Reutilización  
-Fácil cambiar o agregar clasificadores/notificadores.
+📎 Guía Rápida de Uso
+Configurar Variables de Entorno:
 
-## 5. Portabilidad  
-YAML asegura que las rutas y parámetros no estén quemados en el código.
+TELEGRAM_BOT_TOKEN, EMAIL_PASSWORD, etc.
 
-## 6. Defensibilidad  
-- Manejo de errores al cargar modelo  
-- Verificación de credenciales Telegram
+Entrenar Modelo (Opcional):
 
-## 7. Testabilidad  
-- Se pueden usar mocks (`FakeNotifier`, `DummyClassifier`)  
-- `AudioMonitor` usa callback inyectable  
+Usar audio_trainer con HOP_DURATION=2.0 para audios largos.
 
-## 8. KISS / DRY / YAGNI  
-- Código simple  
-- Sin duplicación  
-- Sin funciones que no se usen
+Ejecutar:
 
----
+python main.py
 
-# ✔ Checklist Final
+Visualizar Datos:
 
-- [x] Captura de audio en tiempo real  
-- [x] Clasificación por IA  
-- [x] Extracción MFCC  
-- [x] Notificaciones por Telegram  
-- [x] Registro CSV automatizado  
-- [x] UI con semáforo  
-- [x] YAML configurable  
-- [x] Arquitectura modular  
-- [x] Principios SOLID  
-- [x] Polimorfismo funcional  
-
----
-
-# 📎 Recomendaciones Futuras
-
-- Agregar `WhatsAppNotifier`  
-- Incluir `DummySoundClassifier` para pruebas  
-- Crear pruebas unitarias con `pytest`  
-- Documentación extendida con docstrings  
+Usar DB Browser for SQLite para abrir los archivos .db generados en logs/.

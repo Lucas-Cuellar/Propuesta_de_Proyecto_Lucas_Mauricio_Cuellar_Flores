@@ -2,6 +2,11 @@
 import numpy as np
 import librosa
 
+"""
+Responsabilidad:
+- Preprocesar audio para el modelo Keras
+- Mantener lógica DSP separada del clasificador
+"""
 
 def compute_mfcc(audio: np.ndarray, sr: int, n_mfcc: int) -> np.ndarray:
     return librosa.feature.mfcc(

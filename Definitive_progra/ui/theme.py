@@ -1,6 +1,13 @@
 # ui/theme.py
 from tkinter import ttk
 
+"""
+Define tema y estilos de Tkinter/ttk.
+
+Responsabilidad:
+- Configurar colores, tipografías y estilos reutilizables.
+"""
+
 BG = "#2E2E2E"
 FG = "white"
 GREEN = "#4CAF50"

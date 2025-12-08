@@ -63,7 +63,7 @@ def train_model(model_name: str, file_paths: dict, log_fn=print):
         early_stop = EarlyStopping(
             monitor="val_loss",
             mode="min",
-            patience=10,
+            patience=6,
             restore_best_weights=True,
             verbose=1
         )
